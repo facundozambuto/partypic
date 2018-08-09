@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_menu_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="22sp"
+        android:layout_weight="0.05"
+        android:background="@drawable/border"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginLeft="10sp"
+            android:layout_weight="0.04"
+            android:text="Cerrar Sesión"
+            app:bootstrapBrand="danger"
+            app:bootstrapSize="sm"
+            app:buttonMode="regular"
+            app:showOutline="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_weight="0.07"
+        android:gravity="center_vertical|center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:textAlignment="center"
+            android:textColor="@color/bootstrap_brand_danger"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Name" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_weight="0.20"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="6sp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:elevation="12dp"
+                android:gravity="center"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:id="@+id/photoImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"></ImageView>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <!--<com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+            android:id="@+id/profileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="129dp"
+            android:layout_weight="0.30"
+            app:bootstrapBrand="danger"
+            app:bootstrapSize="md"
+            app:hasBorder="true" />-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:layout_marginTop="40sp"
+        android:elevation="0dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/instructionsTextView"
+            android:layout_width="268dp"
+            android:layout_height="83dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="0.51"
+            android:text="Escaneá el código QR del evento para ingresar al mismo."
+            android:textAlignment="center"
+            android:textColor="#F782A1"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Para comenzar, escanea el código QR y de esa manera obtener la clave del evento e ingresar al mismo." />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="20sp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btnScanQRCode"
+            android:layout_width="295dp"
+            android:layout_height="45dp"
+            android:layout_weight="0.55"
+            android:text="Escanear Código QR"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="sm"
+            app:buttonMode="regular" />
+
+    </LinearLayout>
+
+</LinearLayout>

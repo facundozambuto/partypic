@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "645323376137",
+    "firebase_url": "https://partypic-6509d.firebaseio.com",
+    "project_id": "partypic-6509d",
+    "storage_bucket": "partypic-6509d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645323376137:android:edd127acb851304f",
+        "android_client_info": {
+          "package_name": "com.fzmobile.partypicapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645323376137-3uceh0a6okdqpfhu96b32q72fm42hl46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fzmobile.partypicapp",
+            "certificate_hash": "a56f2d6c1022ec63e248a96d1eb23c83b6694ad5"
+          }
+        },
+        {
+          "client_id": "645323376137-c0kneeqp9kvp128uhm01fh1cdio7lr24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fzmobile.partypicapp",
+            "certificate_hash": "96004e372162430c83045f93af91b233678c6e45"
+          }
+        },
+        {
+          "client_id": "645323376137-hbqtrvejjv4e4a77o78elboid1oqf2v3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fzmobile.partypicapp",
+            "certificate_hash": "a939eb085989229bf7e5666bc9fbef5b208d0adc"
+          }
+        },
+        {
+          "client_id": "645323376137-n5vnrv72rk0odjk9buoclvs67t12gsi6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzK2ZSEsVhVhj0UQqxAAADSVAIQQXnnbg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645323376137-n5vnrv72rk0odjk9buoclvs67t12gsi6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
