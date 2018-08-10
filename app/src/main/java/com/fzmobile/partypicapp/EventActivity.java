@@ -137,7 +137,7 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
     String ImagenPerfil = "profile_pic" ;
     String NombrePerfil = "profile_name" ;
     String ImagePathFieldOnServer = "image" ;
-    String ImageUploadPathOnSever ="http://www.partypicapp.com/endpoints/Subir_Imagen.php" ;
+    String ImageUploadPathOnSever ="http://www.partypicaok.com/endpoints/Subir_Imagen.php" ;
 
     //storage permission code
     private static final int STORAGE_PERMISSION_CODE = 123;
@@ -458,7 +458,7 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
             notificationConfig.setTitle("Subiendo imagen");
             notificationConfig.setIcon(R.mipmap.icon_logo);
 
-            new MultipartUploadRequest(this, uploadId, "http://www.partypicapp.com/endpoints/Subir_Imagen.php")
+            new MultipartUploadRequest(this, uploadId, "http://www.partypicok.com/endpoints/Subir_Imagen.php")
                     .addFileToUpload(getRealPathFromURI(filePath), "image") //Adding file
                     .addParameter("comentario", comentario)
                     .addParameter("id_evento", IdEvento)

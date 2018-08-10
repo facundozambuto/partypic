@@ -411,7 +411,7 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
             }
             else
             {
-                String url = "http://www.partypicapp.com/endpoints/Get_EventoByScan.php?codigo=" + result.getContents().toString();
+                String url = "http://www.partypicok.com/endpoints/Get_EventoByScan.php?codigo=" + result.getContents().toString();
                 Log.d("ADebugTag", "Value: " + url);
                 new ConsultarDatos().execute(url);
             }
