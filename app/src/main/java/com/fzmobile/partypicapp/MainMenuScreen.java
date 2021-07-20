@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.BootstrapThumbnail;
@@ -48,6 +50,8 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.zxing.Result;
@@ -69,6 +73,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.android.volley.toolbox.Volley;
+import com.android.volley.RequestQueue;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
@@ -101,6 +114,7 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu_screen);
+
 
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
@@ -166,7 +180,6 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
                 {
                     displayProfileInfo(profile);
                     facebookLogin = true;
-
                 }
                 else
                 {
@@ -411,7 +424,7 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
             }
             else
             {
-                String url = "http://www.partypicok.com/endpoints/Get_EventoByScan.php?codigo=" + result.getContents().toString();
+                String url = "http://192.168.0.221:45455/api/events/GetByEventCode/" + result.getContents().toString();
                 Log.d("ADebugTag", "Value: " + url);
                 new ConsultarDatos().execute(url);
             }
@@ -439,12 +452,9 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
-        protected void onPostExecute(String result) {
-
-            String str1 = result;
-            String str2 = "Macri Gato";
-
-            if (str1.toLowerCase().contains(str2.toLowerCase()))
+        protected void onPostExecute(String result)
+        {
+            if (result.isEmpty() || result == "Unable to retrieve web page. URL may be invalid.")
             {
                 AlertDialog alertDialog = new AlertDialog.Builder(MainMenuScreen.this).create();
                 alertDialog.setTitle("¡Ups!");
@@ -459,17 +469,11 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
             }
             else
             {
-                JSONArray ja = null;
+                JSONObject ja = null;
                 try
                 {
-                    ja = new JSONArray(result);
-                    String nombre = ja.getString(0);
-
-                    for (int i = 0; i < ja.length(); ++i)
-                    {
-                        JSONObject jsn = ja.getJSONObject(i);
-                        nombre = jsn.getString("nombre_evento");
-                    }
+                    ja = new JSONObject(result);
+                    String eventName = ja.get("name").toString();
 
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuScreen.this);
                     SharedPreferences.Editor editor = preferences.edit();
@@ -494,43 +498,41 @@ public class MainMenuScreen extends FragmentActivity implements GoogleApiClient.
     private String downloadUrl(String myurl) throws IOException {
         Log.i("URL", "" + myurl);
         myurl = myurl.replace(" ", "%20");
-        InputStream is = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
-        int len = 500;
+        InputStream inputStream = null;
 
         try {
             URL url = new URL(myurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
-            // Starts the query
+
             conn.connect();
             int response = conn.getResponseCode();
             Log.d("Respuesta", "The response is: " + response);
-            is = conn.getInputStream();
+            inputStream = conn.getInputStream();
 
-            // Convert the InputStream into a string
-            String contentAsString = readIt(is, len);
+            String contentAsString = readIt(inputStream);
             return contentAsString;
 
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
         } finally {
-            if (is != null) {
-                is.close();
+            if (inputStream != null) {
+                inputStream.close();
             }
         }
     }
 
-    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+    public String readIt(InputStream inputStream) throws IOException, UnsupportedEncodingException {
+
+        String line;
+        StringBuilder text = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        while((line = reader.readLine()) != null) {
+            text.append(line).append(" ");
+        }
+
+        return text.toString();
     }
 
     public void displayExceptionMessage(String msg)

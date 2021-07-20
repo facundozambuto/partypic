@@ -137,7 +137,7 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
     String ImagenPerfil = "profile_pic" ;
     String NombrePerfil = "profile_name" ;
     String ImagePathFieldOnServer = "image" ;
-    String ImageUploadPathOnSever ="http://www.partypicaok.com/endpoints/Subir_Imagen.php" ;
+    String ImageUploadPathOnSever = "http://www.partypicaok.com/endpoints/Subir_Imagen.php" ;
 
     //storage permission code
     private static final int STORAGE_PERMISSION_CODE = 123;
@@ -257,10 +257,10 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
         Bundle bundle = getIntent().getExtras();
         String result = bundle.getString("result");
 
-        JSONArray ja = null;
+        JSONObject ja = null;
         try
         {
-            ja = new JSONArray(result);
+            /*ja = new JSONArray(result);
             String nombre = ja.getString(0);
             String id_evento = ja.getString(0);
 
@@ -270,6 +270,10 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
                 nombre = jsn.getString("nombre_evento");
                 id_evento = jsn.getString("id_evento");
             }
+*/
+            ja = new JSONObject(result);
+            String eventName = ja.get("name").toString();
+            String eventId = ja.get("eventId").toString();
 
             photoImageViewEvent = (ImageView) findViewById(R.id.photoImageViewEvent);
 //            photoImageViewEvent = (BootstrapCircleThumbnail) findViewById(R.id.photoImageViewEvent);
@@ -292,9 +296,9 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
             }
 
             textViewBienvenida = (TextView) findViewById(R.id.textViewBienvenida);
-            textViewBienvenida.setText(nombre);
+            textViewBienvenida.setText(eventName);
             nombrePerfil.setText(nombreDePerfil);
-            IdEvento = id_evento;
+            IdEvento = eventId;
         }
         catch (JSONException e)
         {
@@ -308,31 +312,32 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
         imageName = (EditText)findViewById(R.id.editText);
 
         requestStoragePermission();
+        requestToWritePermission();
 
         CaptureImageFromCamera.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-            intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            File photoFile = null;
-            try
-            {
-                photoFile = createImageFile();
-            }
-            catch (IOException ex)
-            {
-                // Error occurred while creating the File
-                Log.d("mylog", "Exception while creating file: " + ex.toString());
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null)
-            {
-                Log.d("mylog", "Photofile not null");
-                Uri photoURI = FileProvider.getUriForFile(EventActivity.this,"com.fzmobile.partypicapp.fileprovider", photoFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
-            }
+                intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                File photoFile = null;
+                try
+                {
+                    photoFile = createImageFile();
+                }
+                catch (IOException ex)
+                {
+                    // Error occurred while creating the File
+                    Log.d("mylog", "Exception while creating file: " + ex.toString());
+                }
+                // Continue only if the File was successfully created
+                if (photoFile != null)
+                {
+                    Log.d("mylog", "Photofile not null");
+                    Uri photoURI = FileProvider.getUriForFile(EventActivity.this,"com.fzmobile.partypicapp.fileprovider", photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
+                }
             }
         });
 
@@ -352,7 +357,6 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
                 salirEvento();
             }
         });
-
     }
 
     private void salirEvento() {
@@ -440,7 +444,6 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
         }
     }
 
-
     public void uploadMultipart()
     {
         String comentario = imageName.getText().toString().trim();
@@ -458,13 +461,13 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
             notificationConfig.setTitle("Subiendo imagen");
             notificationConfig.setIcon(R.mipmap.icon_logo);
 
-            new MultipartUploadRequest(this, uploadId, "http://www.partypicok.com/endpoints/Subir_Imagen.php")
-                    .addFileToUpload(getRealPathFromURI(filePath), "image") //Adding file
-                    .addParameter("comentario", comentario)
-                    .addParameter("id_evento", IdEvento)
-                    .addParameter("profile_name", NombrePerfil)
-                    .addParameter("profile_pic", ImagenPerfil)
-                    .addParameter("profile_id", ProfileId)
+            new MultipartUploadRequest(this, uploadId, "http://192.168.0.221:45455/api/images/UploadImage")
+                    .addFileToUpload(getRealPathFromURI(filePath), "Image") //Adding file
+                    .addParameter("Comment", comentario)
+                    .addParameter("EventId", IdEvento)
+                    .addParameter("ProfileName", NombrePerfil)
+                    .addParameter("ProfileImageUrl", ImagenPerfil)
+                    .addParameter("ProfileId", ProfileId)
                     .setUtf8Charset()
                     .setNotificationConfig(notificationConfig)
                     .setMaxRetries(2)
@@ -509,6 +512,19 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
     }
 
+    private void requestToWritePermission()
+    {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
+
+        }
+        //And finally ask for the permission
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+
     public Uri getImageUri(Context inContext, Bitmap inImage)
     {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -529,7 +545,7 @@ public class EventActivity extends FragmentActivity implements SingleUploadBroad
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
